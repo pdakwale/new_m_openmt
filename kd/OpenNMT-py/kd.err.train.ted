@@ -1,0 +1,6 @@
+/home/pdakwal1/new_m_openmt/kd/OpenNMT-py/onmt/modules/GlobalAttention.py:150: UserWarning: Implicit dimension choice for softmax has been deprecated. Change the call to include dim=X as an argument.
+  align_vectors = self.sm(align.view(batch*targetL, sourceL))
+/home/pdakwal1/new_m_openmt/kd/OpenNMT-py/onmt/Loss.py:104: UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument.
+  scores = self.logsoftmax(scores_p)
+/home/pdakwal1/new_m_openmt/kd/OpenNMT-py/onmt/Loss.py:109: UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument.
+  teacher_scores = self.teacher_logsoftmax(teacher_scores_p)

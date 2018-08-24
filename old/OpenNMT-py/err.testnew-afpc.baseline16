@@ -1,0 +1,25 @@
+/home/pdakwal1/new_m_openmt/old/OpenNMT-py/onmt/modules/GlobalAttention.py:150: UserWarning: Implicit dimension choice for softmax has been deprecated. Change the call to include dim=X as an argument.
+  align_vectors = self.sm(align.view(batch*targetL, sourceL))
+/home/pdakwal1/anaconda2/lib/python2.7/site-packages/torch/nn/modules/container.py:67: UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument.
+  input = module(input)
+cat /zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/new_full_data/baseline/baseline_16/tests//trans.afp.new.mt09.epoch8.en | /home/pdakwal1/code/oister/resources/mteval/Programs/postprocess/replace-empty-line-with-nil.pl | /home/pdakwal1/code/oister/resources/mteval/Programs/postprocess/rm_non-ascii.pl | /home/pdakwal1/code/oister/resources/mteval/Programs/postprocess/untokenize.pl | /home/pdakwal1/code/oister/preprocessing/scripts/arabizi-transliteration-postprocessing.pl | /home/pdakwal1/code/oister/resources/mteval/Programs/postprocess/replace-empty-line-with-nil.pl > tmp.29373.txt
+Reading in file /home/ilps/smt/data/translation_test/OpenMT/mt09/arabic-english/mt09.arabic-english.src.xml
+orig: -- تغطية خسائر التشغيل;
+old: -- - - -- --
+new: --
+
+orig: -- الاقراض للشركات "غير ذات الملاءة ";
+old: -- - - -- -- samba (to)
+new: -- samba (to)
+
+orig: -- الاستثمار غير المباشر فى الشركات "غير المنصفة";
+old: -- - - -- -- i do not want to see the results of the talks.
+new: -- i do not want to see the results of the talks.
+
+orig: الجميع كان يعرف ان العراق لا يمتلك اسلحة دمار شامل .. ولكن ومع الوقت .. ومع الضغط الاعلامي المتواصل والمنظم .. تولد في ذهنيه الناس الداخليه قناعه شبه كامله بحتمية احتلال العراق ..!!
+old: with long-term media pressure ... it is almost entirely clear that iraq has no weapons of mass destruction, "he said.
+new: with long-term media pressure .. it is almost entirely clear that iraq has no weapons of mass destruction, "he said.
+
+cat tmp.29373.txt > /zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/new_full_data/baseline/baseline_16/tests//trans.afp.new.mt09.epoch8.en.xml
+CentOS_7Can't locate XML/Twig.pm in @INC (@INC contains: /usr/lib64/perl5/ /usr/share/perl5/ /home/ilps/smt/software/perl/modules/lib64/perl5/ /usr/local/lib64/perl5 /usr/local/share/perl5 /usr/lib64/perl5/vendor_perl /usr/share/perl5/vendor_perl /usr/lib64/perl5 /usr/share/perl5 .) at /home/pdakwal1/code/oister/resources/software/mteval/mteval-v13a/current/mteval-v13a_cm.pl line 36.
+BEGIN failed--compilation aborted at /home/pdakwal1/code/oister/resources/software/mteval/mteval-v13a/current/mteval-v13a_cm.pl line 36.

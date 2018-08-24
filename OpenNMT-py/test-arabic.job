@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#SBATCH --mem=60g
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1
+#SBATCH -o log.test-arabic-model2
+#SBATCH -e err.test-arabic.model2
+source ${HOME}/.bashrc
+
+#source activate py27
+
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/full/multi/new_tests/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/full/multi/exp2_model/continue.arabic-full-model_acc_54.37_ppl_11.58_e13.model2.pt
+
+export EVAL=$SMTAMS/data/translation_test/OpenMT/mt09/arabic-english
+export REFXML=$EVAL/mt09.arabic-english.ref.xml
+export SRCXML=$EVAL/mt09.arabic-english.src.xml
+export TEST=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/test-sets/mt09.arabic-english.src.tok_atb_mt.bpe.txt
+
+python -u translate.py -model $MODEL -src $TEST -output $DATA/trans.multi.cont.model2.ar-en.mt09.bpe.epoch13.en -gpu 0
+
+sed -r 's/(@@ )|(@@ ?$)//g' $DATA/trans.multi.cont.model2.ar-en.mt09.bpe.epoch13.en > $DATA/trans.multi.cont.model2.ar-en.mt09.epoch13.en
+
+$OISTERHOME/evaluation/mteval-plain2xml.pl --tst-plain=$DATA/trans.multi.cont.model2.ar-en.mt09.epoch13.en --tst-xml=$DATA/trans.multi.cont.model2.ar-en.mt09.epoch13.en.xml  --src-xml=$SRCXML --src-lang=Arabic --trg-lang=English --untokenize=1 --rm-non-ascii=1 --truecase=0
+
+$OISTERHOME/resources/software/mteval/mteval-v13a/current/mteval-v13a_cm.pl -s $SRCXML -r $REFXML -t $DATA/trans.multi.cont.model2.ar-en.mt09.epoch13.en.xml -b 1> bleu.no-cas-trans.multi.cont.model2.ar-en.mt09.epoch13

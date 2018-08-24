@@ -1,0 +1,13 @@
+#!/bin/sh
+# The following lines instruct Slurm to allocate one GPU.
+#SBATCH -p gpu
+#SBATCH --gres=gpu:p40:1
+#SBATCH --mem=60G
+#SBATCH -o log.train.wmt
+#SBATCH -e err.train.wmt
+source ${HOME}/.bashrc
+
+#source activate py27
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/wmt/multi-update/data/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/wmt/multi-update/model/
+python -u train.py -data $DATA/wmt-data -save_model $MODEL/wmt-model -src_word_vec_size 1000 -tgt_word_vec_size 1000 -rnn_size 1000 -gpuid 0

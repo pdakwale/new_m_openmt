@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#SBATCH --mem=60g
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:pascal:1
+#SBATCH -o test.log.ted-kd.baseline.1
+#SBATCH -e test.err.ted-kd.baseline.1
+source ${HOME}/.bashrc
+
+#source activate py27
+
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/data/30kbpe/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/kd_test/kd.ted-en-de-30k-model_acc_51.45_ppl_4.51_e14.pt
+export TEST=$DATA/swap.test.30kbpe.en
+export OUT=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/kd_test/tests/
+
+python -u translate.py -model $MODEL -src $TEST -output $OUT/trans.ted-en-de.swap.kd.bpe.epoch14.de.1 -gpu 0
+
+sed -r 's/(@@ )|(@@ ?$)//g' $OUT/trans.ted-en-de.swap.kd.bpe.epoch14.de.1 > $OUT/trans.ted-en-de.swap.kd.epoch14.de.1
+
+perl /home/pdakwal1/latest_tardis/tardis/scripts/multi-bleu.perl /zfs/ilps-plex1/slurm/datastore/pdakwal1/tardis/ted/baseline/data/nonbpe/test.nonbpe.de < $OUT/trans.ted-en-de.swap.kd.epoch14.de.1 > $OUT/bleu14.en-de.swap.kd.epoch14.1

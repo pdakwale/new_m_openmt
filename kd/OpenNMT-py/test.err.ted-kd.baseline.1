@@ -1,0 +1,9 @@
+THCudaCheck FAIL file=torch/csrc/cuda/Module.cpp line=88 error=38 : no CUDA-capable device is detected
+Traceback (most recent call last):
+  File "translate.py", line 165, in <module>
+    main()
+  File "translate.py", line 88, in main
+    torch.cuda.set_device(opt.gpu)
+  File "/home/pdakwal1/anaconda2/lib/python2.7/site-packages/torch/cuda/__init__.py", line 223, in set_device
+    torch._C._cuda_setDevice(device)
+RuntimeError: cuda runtime error (38) : no CUDA-capable device is detected at torch/csrc/cuda/Module.cpp:88

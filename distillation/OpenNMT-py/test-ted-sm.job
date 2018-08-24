@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#SBATCH --mem=12g
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1
+#SBATCH -o test.log.ted-sm.baseline
+#SBATCH -e test.err.ted-sm.baseline
+source ${HOME}/.bashrc
+
+#source activate py27
+
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/data/30kbpe/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/distil_test/sm.ted-en-de-30k-model_acc_52.78_ppl_19.10_e14.pt
+export TEST=$DATA/test.30kbpe.en
+export OUT=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/distil_test/test/sm/
+
+python -u translate.py -model $MODEL -src $TEST -output $OUT/trans.sm.ted-en-de.bpe.epoch14.de -gpu 0
+
+sed -r 's/(@@ )|(@@ ?$)//g' $OUT/trans.sm.ted-en-de.bpe.epoch14.de > $OUT/trans.sm.ted-en-de.epoch14.de
+
+perl /home/pdakwal1/latest_tardis/tardis/scripts/multi-bleu.perl /zfs/ilps-plex1/slurm/datastore/pdakwal1/tardis/ted/baseline/data/nonbpe/test.nonbpe.de < $OUT/trans.sm.ted-en-de.epoch14.de > $OUT/bleu14.sm.en-de.epoch14

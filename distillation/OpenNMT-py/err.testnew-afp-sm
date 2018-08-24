@@ -1,0 +1,17 @@
+/home/pdakwal1/new_m_openmt/distillation/OpenNMT-py/onmt/modules/GlobalAttention.py:150: UserWarning: Implicit dimension choice for softmax has been deprecated. Change the call to include dim=X as an argument.
+  align_vectors = self.sm(align.view(batch*targetL, sourceL))
+/home/pdakwal1/new_m_openmt/distillation/OpenNMT-py/onmt/Translator.py:156: UserWarning: Implicit dimension choice for log_softmax has been deprecated. Change the call to include dim=X as an argument.
+  out = self.model.logsoftmax(out_g).data
+cat /zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/distillation_exp/tests//trans.afp.sm.mt09.epoch1.en | /home/pdakwal1/code/oister/resources/mteval/Programs/postprocess/replace-empty-line-with-nil.pl | /home/pdakwal1/code/oister/resources/mteval/Programs/postprocess/rm_non-ascii.pl | /home/pdakwal1/code/oister/resources/mteval/Programs/postprocess/untokenize.pl | /home/pdakwal1/code/oister/preprocessing/scripts/arabizi-transliteration-postprocessing.pl | /home/pdakwal1/code/oister/resources/mteval/Programs/postprocess/replace-empty-line-with-nil.pl > tmp.1676.txt
+Reading in file /home/ilps/smt/data/translation_test/OpenMT/mt09/arabic-english/mt09.arabic-english.src.xml
+orig: لندن 2007-6-12 (ا ف ب) - رفض مجلس العموم البريطاني الاثنين مذكرة تقدم بها حزب المحافظين وتدعو الى اجراء تحقيق جديد حول سياسة الحكومة العمالية في العراق.
+old: -- - - -- -- - - -- -- britain, france, russia, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, russia, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states
+new: -- - - -- -- - - -- -- britain, france, russia, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, russia, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states, the united states.
+
+orig: -- تغطية خسائر التشغيل;
+old: - - - - -- - - -- --
+new: --
+
+cat tmp.1676.txt > /zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/distillation_exp/tests//trans.afp.sm.mt09.epoch1.en.xml
+CentOS_7Can't locate XML/Twig.pm in @INC (@INC contains: /usr/lib64/perl5/ /usr/share/perl5/ /home/ilps/smt/software/perl/modules/lib64/perl5/ /usr/local/lib64/perl5 /usr/local/share/perl5 /usr/lib64/perl5/vendor_perl /usr/share/perl5/vendor_perl /usr/lib64/perl5 /usr/share/perl5 .) at /home/pdakwal1/code/oister/resources/software/mteval/mteval-v13a/current/mteval-v13a_cm.pl line 36.
+BEGIN failed--compilation aborted at /home/pdakwal1/code/oister/resources/software/mteval/mteval-v13a/current/mteval-v13a_cm.pl line 36.

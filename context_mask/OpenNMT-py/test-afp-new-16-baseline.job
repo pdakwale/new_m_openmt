@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#SBATCH --mem=60g
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1
+#SBATCH -o log.testnew-afp-cm16
+#SBATCH -e err.testnew-afpc.cm16
+source ${HOME}/.bashrc
+
+#source activate py27
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/new_full_data/context_mask/16_batch/tests/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/new_full_data/context_mask/16_batch/model/afp-new-cm-16-model_acc_46.05_ppl_25.08_e14.pt
+export EVAL=$SMTAMS/data/translation_test/OpenMT/mt09/arabic-english
+export REFXML=$EVAL/mt09.arabic-english.ref.xml
+export SRCXML=$EVAL/mt09.arabic-english.src.xml
+export TEST=/zfs/ilps-plex1/slurm/datastore/pdakwal1/new_openmt/arabic/new_afp_data/test_sets/mt09.arabic-english.src.tok_atb_mt.bpe.20k.txt
+
+python -u translate.py -model $MODEL -src $TEST -output $DATA/trans.afp.cm.mt09.bpe.epoch14.en -gpu 0
+
+sed -r 's/(@@ )|(@@ ?$)//g' $DATA/trans.afp.cm.mt09.bpe.epoch14.en > $DATA/trans.afp.cm.mt09.epoch14.en
+
+$OISTERHOME/evaluation/mteval-plain2xml.pl --tst-plain=$DATA/trans.afp.cm.mt09.epoch14.en --tst-xml=$DATA/trans.afp.cm.mt09.epoch14.en.xml  --src-xml=$SRCXML --src-lang=Arabic --trg-lang=English --untokenize=1 --rm-non-ascii=1 --truecase=0
+
+$OISTERHOME/resources/software/mteval/mteval-v13a/current/mteval-v13a_cm.pl -s $SRCXML -r $REFXML -t $DATA/trans.afp.cm.mt09.epoch14.en -b 1> $DATA/trans.afp.cm.mt09.epoch14.en.trans.bleu-nocased

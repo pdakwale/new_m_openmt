@@ -1,0 +1,16 @@
+#!/bin/sh
+# The following lines instruct Slurm to allocate one GPU.
+#SBATCH -p gpu
+#SBATCH --gres=gpu:1
+#SBATCH --mem=12G
+#SBATCH -o sm.log.train.ted
+#SBATCH -e sm.err.train.ted
+source ${HOME}/.bashrc
+
+#source activate py27
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/data/30kbpe/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/distil_test/
+
+#python -u preprocess.py -train_src $DATA/train.en -train_tgt $DATA/train.de -valid_src $DATA/valid.en -valid_tgt $DATA/valid.de -save_data $DATA/ted-en-de-30k-data -src_vocab_size 30000 -tgt_vocab_size 30000 -src_seq_length 50 -tgt_seq_length 50 
+
+python -u train.py -data $DATA/ted-en-de-30k-data -save_model $MODEL/sm.ted-en-de-30k-model -src_word_vec_size 1000 -tgt_word_vec_size 1000 -rnn_size 1000 -gpuid 0

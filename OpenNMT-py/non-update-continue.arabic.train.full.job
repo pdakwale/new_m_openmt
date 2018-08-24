@@ -1,0 +1,13 @@
+#!/bin/sh
+# The following lines instruct Slurm to allocate one GPU.
+#SBATCH -p gpu
+#SBATCH --gres=gpu:1
+#SBATCH --mem=60G
+#SBATCH -o log.nu.exp2.e2.arabic.full
+#SBATCH -e err.nu.exp2.e2.arabic.full
+source ${HOME}/.bashrc
+
+#source activate py27
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/full/multi/data/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/full/multi/exp2_model/
+python -u train.py -data $DATA/ldc_afp.data -save_model $MODEL/continue.arabic-full-model -src_word_vec_size 1000 -tgt_word_vec_size 1000 -rnn_size 1000 -epochs 13 -train_from1  /zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/full/baselines/model/arabic-baseline-model_acc_48.21_ppl_17.26_e2.pt -train_from2 /zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/full/baselines/0.2model/0.2arabic-baseline-model_acc_47.45_ppl_18.07_e2.pt -gpuid 0

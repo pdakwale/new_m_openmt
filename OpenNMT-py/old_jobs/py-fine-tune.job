@@ -1,0 +1,13 @@
+#!/bin/sh
+# The following lines instruct Slurm to allocate one GPU.
+#SBATCH -p gpu
+#SBATCH --gres=gpu:1
+#SBATCH --mem=60G
+#SBATCH -o log.toy
+#SBATCH -e err.toy
+source ${HOME}/.bashrc
+
+#source activate py27
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/toy/data/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/toy/model/
+python -u train.py -data $DATA/data-toy -save_model $MODEL/model-toy -src_word_vec_size 1000 -tgt_word_vec_size 1000 -rnn_size 1000 -gpuid 0

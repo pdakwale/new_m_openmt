@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#SBATCH --mem=60g
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1
+#SBATCH -o log.testnew-afp-baseline
+#SBATCH -e err.testnew-afpc.baseline
+source ${HOME}/.bashrc
+
+#source activate py27
+
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/new_full_data/baseline/tests/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/new_full_data/baseline/model/afp-new-baseline-model_acc_56.94_ppl_9.49_e13.pt
+
+export EVAL=$SMTAMS/data/translation_test/OpenMT/mt09/arabic-english
+export REFXML=$EVAL/mt09.arabic-english.ref.xml
+export SRCXML=$EVAL/mt09.arabic-english.src.xml
+export TEST=/zfs/ilps-plex1/slurm/datastore/pdakwal1/new_openmt/arabic/new_afp_data/test_sets/mt09.arabic-english.src.tok_atb_mt.bpe.20k.txt
+
+python -u translate.py -model $MODEL -src $TEST -output $DATA/trans.afp.new.mt09.bpe.epoch13.en -gpu 0
+
+sed -r 's/(@@ )|(@@ ?$)//g' $DATA/trans.afp.new.mt09.bpe.epoch13.en > $DATA/trans.afp.new.mt09.epoch13.en
+
+$OISTERHOME/evaluation/mteval-plain2xml.pl --tst-plain=$DATA/trans.afp.new.mt09.epoch13.en --tst-xml=$DATA/trans.afp.new.mt09.epoch13.en.xml  --src-xml=$SRCXML --src-lang=Arabic --trg-lang=English --untokenize=1 --rm-non-ascii=1 --truecase=0
+
+$OISTERHOME/resources/software/mteval/mteval-v13a/current/mteval-v13a_cm.pl -s $SRCXML -r $REFXML -t $DATA/trans.afp.new.mt09.epoch13.en -b 1> $DATA/trans.afp.new.mt09.epoch13.en.trans.bleu-nocased

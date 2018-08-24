@@ -1,0 +1,17 @@
+#!/bin/sh
+# The following lines instruct Slurm to allocate one GPU.
+#SBATCH -p gpu
+#SBATCH --gres=gpu:1
+#SBATCH --nodelist=ilps-gpu14
+#SBATCH --mem=12G
+#SBATCH -o log.train.en-ar-16-baseline.afp
+#SBATCH -e err.train.en-ar-16-baseline.afp
+source ${HOME}/.bashrc
+
+#source activate py27
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/new_full_data/baseline/en-ar/train_reverse/data/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/new_full_data/baseline/en-ar/train_reverse/model/
+
+python -u preprocess.py -train_src $DATA/train.afp.bitext.bpe.english -train_tgt $DATA/train.afp.bitext.bpe.arabic -valid_src $DATA/valid.afp.bitext.bpe.english -valid_tgt $DATA/valid.afp.bitext.bpe.arabic -save_data $DATA/afp-new-en-ar-baseline-16-data -src_vocab_size 20000 -tgt_vocab_size 20000 -src_seq_length 50 -tgt_seq_length 50 
+
+python -u train.py -data $DATA/afp-new-en-ar-baseline-16-data -save_model $MODEL/afp-en-ar-new-baseline-16-model -src_word_vec_size 1000 -tgt_word_vec_size 1000 -rnn_size 1000 -gpuid 0 -batch_size 16

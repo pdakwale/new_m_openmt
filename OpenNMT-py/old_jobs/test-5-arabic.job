@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#SBATCH --mem=60g
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1
+#SBATCH -o log.test5-arabic-baseline
+#SBATCH -e err.test5-arabic.baseline
+source ${HOME}/.bashrc
+
+#source activate py27
+
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/full/multi/tests/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/full/multi/model/arabic-full-model_acc_51.23_ppl_14.29_e4.model1.pt
+
+export EVAL=$SMTAMS/data/translation_test/OpenMT/mt09/arabic-english
+export REFXML=$EVAL/mt09.arabic-english.ref.xml
+export SRCXML=$EVAL/mt09.arabic-english.src.xml
+export TEST=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/test-sets/mt09.arabic-english.src.tok_atb_mt.bpe.txt
+
+python -u translate.py -model $MODEL -src $TEST -output $DATA/trans.first.ar-en.mt09.bpe.epoch5.en -gpu 0
+
+sed -r 's/(@@ )|(@@ ?$)//g' $DATA/trans.first.ar-en.mt09.bpe.epoch5.en > $DATA/trans.first.ar-en.mt09.epoch5.en
+
+$OISTERHOME/evaluation/mteval-plain2xml.pl --tst-plain=$DATA/trans.first.ar-en.mt09.epoch5.en --tst-xml=$DATA/trans.first.ar-en.mt09.epoch5.en.xml  --src-xml=$SRCXML --src-lang=Arabic --trg-lang=English --untokenize=1 --rm-non-ascii=1 --truecase=0
+
+$OISTERHOME/resources/software/mteval/mteval-v13a/current/mteval-v13a_cm.pl -s $SRCXML -r $REFXML -t $DATA/trans.first.ar-en.mt09.epoch5.en.xml -b 1> $DATA/trans.first.ar-en.mt09.epoch5.en.trans.bleu-nocased

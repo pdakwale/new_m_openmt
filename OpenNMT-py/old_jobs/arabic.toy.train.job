@@ -1,0 +1,13 @@
+#!/bin/sh
+# The following lines instruct Slurm to allocate one GPU.
+#SBATCH -p gpu
+#SBATCH --gres=gpu:1
+#SBATCH --mem=60G
+#SBATCH -o log.arabic.toy
+#SBATCH -e err.arabic.toy
+source ${HOME}/.bashrc
+
+#source activate py27
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/toy/data/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/arabic/toy/model/
+python -u train.py -data $DATA/toy-arabic-data -save_model $MODEL/arabic-toy-model -src_word_vec_size 100 -tgt_word_vec_size 100 -rnn_size 100 -gpuid 0

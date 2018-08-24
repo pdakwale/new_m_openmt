@@ -1,0 +1,8 @@
+srun: job 47681 queued and waiting for resources
+srun: Force Terminated job 47681
+srun: Job has been cancelled
+srun: error: Unable to allocate resources: No error
+srun: job 47683 queued and waiting for resources
+srun: job 47683 has been allocated resources
+srun: job 47711 queued and waiting for resources
+srun: job 47711 has been allocated resources

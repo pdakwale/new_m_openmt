@@ -1,0 +1,61 @@
+Preparing training ...
+Building Training...
+Building Vocab...
+Building Valid...
+Saving train/valid/fields
+Loading train and validate data from '/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/data/30kbpe//ted-en-de-30k-data'
+ * number of training sentences: 166556
+ * maximum batch size: 64
+ * vocabulary size. source = 28074; target = 29637
+Building model...
+Intializing parameters.
+NMTModel(
+  (encoder): RNNEncoder(
+    (embeddings): Embeddings(
+      (make_embedding): Sequential(
+        (emb_luts): Elementwise(
+          (0): Embedding(28074, 1000, padding_idx=1)
+        )
+      )
+    )
+    (rnn): LSTM(1000, 1000, num_layers=2, dropout=0.3)
+  )
+  (decoder): InputFeedRNNDecoder(
+    (embeddings): Embeddings(
+      (make_embedding): Sequential(
+        (emb_luts): Elementwise(
+          (0): Embedding(29637, 1000, padding_idx=1)
+        )
+      )
+    )
+    (dropout): Dropout(p=0.3)
+    (rnn): StackedLSTM(
+      (dropout): Dropout(p=0.3)
+      (layers): ModuleList(
+        (0): LSTMCell(2000, 1000)
+        (1): LSTMCell(1000, 1000)
+      )
+    )
+    (attn): GlobalAttention(
+      (linear_in): Linear(in_features=1000, out_features=1000)
+      (linear_out): Linear(in_features=2000, out_features=1000)
+      (sm): Softmax()
+      (tanh): Tanh()
+    )
+  )
+  (generator): Sequential(
+    (0): Linear(in_features=1000, out_features=29637)
+    (1): LogSoftmax()
+  )
+)
+* number of parameters: 126409637
+('encoder: ', 44090000)
+('decoder: ', 82319637)
+Namespace(batch_size=64, brnn=False, brnn_merge='concat', cnn_kernel_width=3, context_gate=None, copy_attn=False, copy_attn_force=False, coverage_attn=False, data='/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/data/30kbpe//ted-en-de-30k-data', dec_layers=2, decay_method='', decoder_type='rnn', dropout=0.3, enc_layers=2, encoder_type='rnn', epochs=14, exp='', exp_host='', feat_merge='concat', feat_vec_exponent=0.7, feat_vec_size=-1, fix_word_vecs_dec=False, fix_word_vecs_enc=False, global_attention='general', gpuid=[0], input_feed=1, lambda_coverage=1, layers=-1, learning_rate=1.0, learning_rate_decay=0.5, max_generator_batches=32, max_grad_norm=5, model_type='text', optim='sgd', param_init=0.1, position_encoding=False, pre_word_vecs_dec=None, pre_word_vecs_enc=None, report_every=50, rnn_size=1000, rnn_type='LSTM', save_model='/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/model//tt.ted-en-de-30k-model', seed=-1, share_decoder_embeddings=False, src_word_vec_size=1000, start_checkpoint_at=0, start_decay_at=8, start_epoch=1, tgt_word_vec_size=1000, train_from='', truncated_decoder=0, warmup_steps=4000, word_vec_size=-1)
+
+Epoch  1,    50/ 2603; acc:   3.48; ppl: 11853991657466396.00; 6074 src tok/s; 6675 tgt tok/s;     10 s elapsed
+Epoch  1,   100/ 2603; acc:   1.75; ppl: 13831.23; 7058 src tok/s; 6946 tgt tok/s;     19 s elapsed
+Epoch  1,   150/ 2603; acc:   2.25; ppl: 11433.11; 7062 src tok/s; 7263 tgt tok/s;     29 s elapsed
+Epoch  1,   200/ 2603; acc:   4.46; ppl: 4403.94; 6615 src tok/s; 6952 tgt tok/s;     38 s elapsed
+Epoch  1,   250/ 2603; acc:  12.20; ppl: 2077.52; 3308 src tok/s; 3812 tgt tok/s;     47 s elapsed
+Epoch  1,   300/ 2603; acc:  10.27; ppl: 1367.41; 7006 src tok/s; 7132 tgt tok/s;     56 s elapsed

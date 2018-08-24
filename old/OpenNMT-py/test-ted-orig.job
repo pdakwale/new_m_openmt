@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#SBATCH --mem=60g
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1
+#SBATCH -o log.ted-orig.baseline.1
+#SBATCH -e err.ted-orig.baseline.1
+source ${HOME}/.bashrc
+
+#source activate py27
+
+export DATA=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/data/30kbpe/
+export MODEL=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/model/ted-en-de-30k-model_acc_52.36_ppl_18.64_e14.pt
+export TEST=$DATA/swap.test.nobpe.30kbpe.en
+export OUT=/zfs/ilps-plex1/slurm/datastore/pdakwal1/py-op/ted/baseline/tests/
+
+python -u translate.py -model $MODEL -src $TEST -output $OUT/trans.swap.ted-en-de.wmt15.orig.bpe.epoch14.de.1 -gpu 0
+
+sed -r 's/(@@ )|(@@ ?$)//g' $OUT/trans.swap.ted-en-de.wmt15.orig.bpe.epoch14.de.1 > $OUT/trans.swap.ted-en-de.wmt15.orig.epoch14.de.1
+
+perl /home/pdakwal1/latest_tardis/tardis/scripts/multi-bleu.perl /zfs/ilps-plex1/slurm/datastore/pdakwal1/tardis/ted/baseline/data/nonbpe/test.nonbpe.de < $OUT/trans.swap.ted-en-de.wmt15.orig.epoch14.de.1 > $OUT/bleu14.swap.en-de.wmt15.orig.epoch14.1
